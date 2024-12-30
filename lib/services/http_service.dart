@@ -42,10 +42,21 @@ class HTTPService {
   }
 
   Future<Object> getAllArticles() async {
-    print("GET ALL ARTICLES");
-    print("ARTICLE_BASE_URL: $_base_url/article/all");
+    print("öFETCH_URL: $_base_url/article/all");
     try {
       Response data = await dio.get('$_base_url/article/all');
+      print(data);
+      return data;
+    } catch (e) {
+      print(e);
+      return e;
+    }
+  }
+
+  Future<Object> getHomeContent() async {
+    print("ööFETCH_URL: $_base_url/client/page/home");
+    try {
+      Response data = await dio.get('$_base_url/client/page/home');
       print(data);
       return data;
     } catch (e) {
