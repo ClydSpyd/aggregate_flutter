@@ -56,7 +56,9 @@ class HTTPService {
   Future<Object> getHomeContent() async {
     print("ööFETCH_URL: $_base_url/client/page/home");
     try {
+      print("FETCHING HOME CONTENT");
       Response data = await dio.get('$_base_url/client/page/home');
+      print("SUCCESS");
       print(data);
       return data;
     } catch (e) {

@@ -23,11 +23,11 @@ class Article {
     return Article(
       id: json['_id'],
       title: json['title'],
-      caption: json['caption'],
-      content: json['content'],
+      caption: json['caption'] ?? "",
+      content: json['content'] ?? "",
       imgUrl: json['imgUrl'],
       tags: List<String>.from(json['tags']),
-      rawContent: json['rawContent'],
+      rawContent: json['rawContent'] ?? "",
       createdAt: json['createdAt'],
     );
   }

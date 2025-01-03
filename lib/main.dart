@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:news_test/models/app_config.dart';
 import 'package:news_test/widgets/app_bar_main.dart';
-import 'package:news_test/pages/article_page.dart';
+import 'package:news_test/pages/home_page.dart';
 import 'package:news_test/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,9 +42,30 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Scaffold(
-        appBar: AppBarMain(),
-        body: ArticlePage(),
+      home: Scaffold(
+        appBar: const AppBarMain(),
+        body: const HomePage(),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.amp_stories_rounded),
+              label: 'Browse',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bookmarks_rounded),
+              label: 'Saved',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.apps_rounded),
+              label: 'Discover',
+            ),
+          ],
+        ),
       ),
     );
   }
