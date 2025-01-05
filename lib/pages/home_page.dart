@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:news_test/models/app_config.dart';
 import 'package:news_test/services/http_service.dart';
+import 'package:news_test/types/api_response.dart';
 import 'package:news_test/types/article.dart';
 import 'package:news_test/types/home_state_model.dart';
 import 'package:news_test/widgets/article_carousel.dart';
@@ -22,7 +23,8 @@ class _HomePageState extends State<HomePage> {
   late HTTPService httpService;
   List<Article> articles = [];
   bool isLoading = true;
-  late HomeStateModel homeState;
+  HomeStateModel? homeState;
+  String? error;
 
   @override
   void initState() {
@@ -53,20 +55,30 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchHomeState() async {
     try {
-      final Response response = await httpService.getHomeContent() as Response;
-      final data = response.data;
+      final ApiResponse response = await httpService.getHomeContent();
+      if (response.success) {
+        // Safely access data when the request is successful
+        final data = response.data;
+        print("DATA: $data");
 
-      setState(() {
-        // Parse the JSON data into a StateModel object
-        homeState = HomeStateModel.fromJson(data);
-        isLoading = false;
-      });
+        setState(() {
+          homeState = HomeStateModel.fromJson(data);
+          isLoading = false;
+        });
+      } else {
+        // Handle the error case
+        setState(() {
+          isLoading = false;
+          error = response.error;
+        });
+        print("Error fetching home content: ${response.error}");
+      }
     } catch (error) {
       setState(() {
         isLoading = false;
       });
       // @todo handle error
-      print('Error fetching homeState: $error');
+      print('Error in fetchHomeState: $error');
     }
   }
 
@@ -76,7 +88,35 @@ class _HomePageState extends State<HomePage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (homeState.tracks.isEmpty || homeState.tracks[0].articles.isEmpty) {
+    if (error != null) {
+      return Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error,
+                size: 44,
+                color: Colors.cyan,
+              ),
+              const Text('An error occurred', style: TextStyle(fontSize: 24)),
+              const SizedBox(height: 8),
+              Text(
+                '$error',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12, color: Colors.cyan),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (homeState == null ||
+        homeState!.tracks.isEmpty ||
+        homeState!.tracks[0].articles.isEmpty) {
       return const Center(child: Text('No articles found'));
     }
 
@@ -86,12 +126,12 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.35,
             child: ArticleCarousel(
-                articles: homeState.carouselItems, title: 'Latest News'),
+                articles: homeState!.carouselItems, title: 'Latest News'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ArticleList(
-                articles: homeState.tracks[0].articles, title: 'Trending Now'),
+                articles: homeState!.tracks[0].articles, title: 'Trending Now'),
           )
         ],
       ),

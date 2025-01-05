@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_test/pages/article_page.dart';
 import 'package:news_test/types/article.dart';
 import 'package:intl/intl.dart';
+import 'package:news_test/utils/navigation_util.dart';
 
 final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
@@ -36,10 +37,8 @@ class ArticleList extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   debugPrint('Tapped on ${articles[index].title}');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return ArticlePage(articleId: articles[index].id);
-                  }));
+                  navigateWithSlideTransition(
+                      context, ArticlePage(articleId: articles[index].id));
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),

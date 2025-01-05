@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: const AppBarMain(),
         body: const HomePage(),
         bottomNavigationBar: BottomNavigationBar(

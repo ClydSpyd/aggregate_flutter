@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'package:dio/dio.dart';
+import 'package:news_test/types/api_response.dart';
 import '../models/app_config.dart';
 import 'package:get_it/get_it.dart';
 
@@ -53,12 +54,25 @@ class HTTPService {
     }
   }
 
-  Future<Object> getHomeContent() async {
-    print("ööFETCH_URL: $_base_url/client/page/home");
+  Future<ApiResponse<dynamic>> getHomeContent() async {
+    print("FETCH_URL: $_base_url/client/page/home");
     try {
       print("FETCHING HOME CONTENT");
-      Response data = await dio.get('$_base_url/client/page/home');
+      Response response = await dio.get('$_base_url/client/page/home');
       print("SUCCESS");
+      return ApiResponse(success: true, data: response.data);
+    } catch (e) {
+      print("Error in getHomeContent");
+      return ApiResponse(success: false, error: e.toString());
+    }
+  }
+
+  Future<Object> fetchArticle(String articleId) async {
+    print("öööFETCH_URL: $_base_url/article/id/$articleId");
+    try {
+      print("FETCHING ARTICLE");
+      Response data = await dio.get('$_base_url/article/id/$articleId');
+      print("ARTICLE DATA:");
       print(data);
       return data;
     } catch (e) {
